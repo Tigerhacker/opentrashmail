@@ -44,14 +44,18 @@ function renderEmail(email,id,data)
         btns+='<a class="btn btn-primary" target="_blank" href="api.php?a=attachment&email='+email+'&id='+id+'&filename='+filename+'" role="button">'+filename+'</a>'
     }
     $("#main").html('<h2 class="text-center">'+email+'</h2>\
-        <button onClick="loadAccount(\''+activeemail+'\')" class="btn btn-primary my-2 my-sm-0"><i class="fas fa-backward"></i> Back</button><br/>\
+        <button onClick="loadAccount(\''+activeemail+'\')" class="btn btn-primary my-2 my-sm-0"><i class="fas fa-backward"></i> Back</button>\
+        <a class="btn btn-success text-decoration-none text-white" target="_blank" role="button" id="eml_download" download="'+id+'.eml" href="data:application/octet-stream;base64,'+data.raw+'">Download .eml</a>\<br/>\
         '+(data.parsed.body?'<pre>'+data.parsed.body+'</pre>':'')+' \
         '+(data.parsed.htmlbody?'<div class="card card-body bg-light"><h4>HTML view</h4>'+data.parsed.htmlbody+'</pre></div><br/>':'')+' \
         '+(btns!==''?'<h4>Attachments</h4>'+btns:'')+'\
         <div class="card card-body bg-light">\
-        <h4>Raw Email</h4><pre><code>'+data.raw+'</code></pre>\
+        <h4 id="base64_raw">Raw Email</h4>\
+        <pre><code id="decoded_raw"></code></pre>\
         </div>\
         ')
+    $("#base64_raw").data( "raw", data.raw )
+    $("#decoded_raw").text( atob($("#base64_raw").data( "raw")) )  // Add later in case it can't be decoded
 }
 
 function listAddresses(e)
