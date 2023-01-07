@@ -94,7 +94,7 @@ class CustomSMTPServer(SMTPServer):
                 c_disp = part.get('Content-Disposition')
                 c_set = initial_charset
                 if part.get('content-type') is not None:
-                    (part_ctype, part_ctype_params) = parse_header(msg.get('content-type'))
+                    (part_ctype, part_ctype_params) = parse_header(part.get('content-type'))
                     if part_ctype_params.get('charset') is not None:
                         c_set = part_ctype_params.get('charset')
                         # logger.debug("Charset for this part was specified as: {}".format(c_set))
@@ -102,10 +102,16 @@ class CustomSMTPServer(SMTPServer):
 
                 # text parts will be appended to text_parts
                 if c_type == 'text/plain' and c_disp == None:
-                    text_parts.append(part.get_payload(decode=True).decode(c_set).strip())
+                    try:
+                        text_parts.append(part.get_payload(decode=True).decode(c_set).strip())
+                    except:
+                        logger.debug('Decode error in text/plain part')
                 # ignore html part
                 elif c_type == 'text/html':
-                    html_parts.append(part.get_payload(decode=True).decode(c_set).strip())
+                    try:
+                        html_parts.append(part.get_payload(decode=True).decode(c_set).strip())
+                    except:
+                        logger.debug('Decode error in text/html part')
                 # attachments will be sent as files in the POST request
                 else:
                     filename = part.get_filename()
