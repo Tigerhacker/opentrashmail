@@ -19,7 +19,7 @@ services:
     container_name: opentrashmail-web
     restart: unless-stopped
     ports:
-      - 80:80"
+      - "80:80"
     volumes:
     - ../data:/data
     - ../config.ini:/config.ini:ro
