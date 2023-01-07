@@ -80,6 +80,11 @@ function listAddresses(e)
 function loadAccount(email)
 {
     clearInterval(timer);
+
+    if(!validateEmail(email) && domains!==null && domains.length>0){
+        // try turning it into an email if there is at least 1 domain to choose from
+        email = usernameToEmail(email, domains[0])
+    }
     if(validateEmail(email))
     {
         activeemail = email;
@@ -209,6 +214,13 @@ function changeHash(val)
 function validateEmail(email) {
     var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
+}
+
+function usernameToEmail(username, defaultdomain=undefined){
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))$/;
+    if( defaultdomain!==undefined && re.test(String(username).toLowerCase()) ){
+        return username+'@'+defaultdomain
+    }
 }
 
 /**
