@@ -1,0 +1,26 @@
+version: "3"
+services:
+  smtp:
+    build:
+      context: ../python
+      dockerfile: ../docker/smtp.Dockerfile
+    container_name: opentrashmail-smtp
+    restart: unless-stopped
+    ports:
+      - "25:25"
+    volumes:
+    - ../data:/data
+    - ../config.ini:/config.ini:ro
+
+  web:
+    build:
+      context: ../web
+      dockerfile: ../docker/web.Dockerfile
+    container_name: opentrashmail-web
+    restart: unless-stopped
+    ports:
+      - 80:80"
+    volumes:
+    - ../data:/data
+    - ../config.ini:/config.ini:ro
+    
